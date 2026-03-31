@@ -1021,3 +1021,167 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+// ==================== LEGACY SHUTDOWN (2034-2035) ====================
+let legacyMode = true;
+let serviceBlocked = new Set(['store', 'weather', 'onlineGames', 'cloudSync']);
+
+function showLegacyShutdown() {
+    const legacyNotice = document.getElementById('legacyNotice');
+    if (legacyNotice) legacyNotice.style.display = 'flex';
+    
+    // Disable online services
+    disableOnlineServices();
+    
+    // Show warning in terminal if exists
+    const terminalOutput = document.getElementById('terminalOutput');
+    if (terminalOutput) {
+        const warnLine = document.createElement('div');
+        warnLine.className = 'terminal-line';
+        warnLine.style.color = '#ff8866';
+        warnLine.innerHTML = `<span class="prompt">⚠️ </span><span class="command">[КРИТИЧЕСКОЕ УВЕДОМЛЕНИЕ] Поддержка Soiav 1 прекращена с 2034 г. Магазин и онлайн-сервисы отключены с 2035 г.</span>`;
+        terminalOutput.appendChild(warnLine);
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+    }
+}
+
+function dismissLegacyNotice() {
+    const notice = document.getElementById('legacyNotice');
+    if (notice) {
+        notice.style.opacity = '0';
+        setTimeout(() => {
+            notice.style.display = 'none';
+        }, 300);
+    }
+    showShutdownToast('Система переведена в локальный режим (EOL)');
+}
+
+function disableOnlineServices() {
+    // Block store functionality
+    if (window.storeBlocked) return;
+    window.storeBlocked = true;
+    
+    // Remove online games from apps list
+    apps = apps.filter(app => !['onlineRacing', 'multiplayerChess', 'cloudSudoku'].includes(app.id));
+    renderApps();
+    
+    // Disable weather tile if exists
+    const weatherTile = document.querySelector('.live-tile[data-service="weather"]');
+    if (weatherTile) weatherTile.remove();
+    
+    // Patch installApp to block new installs from cloud
+    const originalInstall = window.installApp;
+    window.installApp = function(appId) {
+        const app = apps.find(a => a.id === appId);
+        if (app && app.requiresCloud === true) {
+            showShutdownToast('Невозможно установить: облачные сервисы отключены с 2035 года');
+            return;
+        }
+        originalInstall(appId);
+    };
+}
+
+function showShutdownToast(message, isError = true) {
+    const toast = document.getElementById('serviceShutdownToast');
+    if (!toast) return;
+    
+    toast.innerHTML = `<i class="fas ${isError ? 'fa-skull-crossbones' : 'fa-info-circle'}"></i> ${message}`;
+    toast.style.display = 'flex';
+    toast.style.opacity = '1';
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 400);
+    }, 3800);
+}
+
+// Override store opening to show shutdown message
+const originalOpenApp = window.openApp;
+window.openApp = function(appId) {
+    if (appId === 'store' && legacyMode) {
+        showShutdownToast('Soiav Store закрыт (поддержка прекращена с 2035 года)');
+        return;
+    }
+    if (appId === 'weatherApp' && legacyMode) {
+        showShutdownToast('Погода недоступна — сервис отключён');
+        return;
+    }
+    originalOpenApp(appId);
+};
+
+// Patch store categories to disable online features
+function patchStoreCategories() {
+    const categoryBtns = document.querySelectorAll('.category-btn');
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            if (legacyMode && this.innerText.includes('Онлайн')) {
+                e.stopPropagation();
+                showShutdownToast('Онлайн-категории отключены (EOL)');
+            }
+        });
+    });
+}
+
+// Show system EOL info in terminal command "eol"
+const originalHandleCommand = window.handleCommand;
+window.handleCommand = function(command, output) {
+    if (command.toLowerCase() === 'eol') {
+        const response = document.createElement('div');
+        response.innerHTML = `
+            <div style="border-left: 3px solid #e74c3c; padding-left: 12px; margin: 8px 0;">
+                <strong>⚠️ Soiav 1 — Конец жизненного цикла</strong><br>
+                • Поддержка основной ОС прекращена: <strong>2034</strong><br>
+                • Магазин и онлайн-сервисы отключены: <strong>2035</strong><br>
+                • Рекомендуется обновление до Soiav 2 или переход на локальный режим.<br>
+                • Некоторые функции могут работать некорректно.
+            </div>
+        `;
+        output.appendChild(response);
+        return;
+    }
+    originalHandleCommand(command, output);
+};
+
+// Patch any online game launcher attempts
+function blockOnlineGames() {
+    const gameItems = document.querySelectorAll('[data-online="true"]');
+    gameItems.forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showShutdownToast('Мультиплеер недоступен: серверы Soiav закрыты');
+        });
+    });
+}
+
+// Override any weather API simulation
+window.updateWeather = function() {
+    if (legacyMode) {
+        showShutdownToast('Сервис погоды отключён (2035)');
+        return;
+    }
+};
+
+// Initialize legacy system after setup
+const originalCompleteSetup = window.completeSetup;
+window.completeSetup = function() {
+    originalCompleteSetup();
+    setTimeout(() => {
+        showLegacyShutdown();
+        patchStoreCategories();
+        blockOnlineGames();
+        // Show EOL message in console
+        console.log('%c⚠️ Soiav 1 — конец поддержки (2034-2035)', 'color: #e74c3c; font-size: 14px; font-weight: bold;');
+    }, 1800);
+};
+
+// Also block any external API calls (mock)
+window.fetch = new Proxy(window.fetch, {
+    apply: function(target, thisArg, args) {
+        const url = args[0];
+        if (typeof url === 'string' && (url.includes('weather') || url.includes('store.soiav') || url.includes('api.soiav'))) {
+            return Promise.reject(new Error('Сервис Soiav отключён (EOL 2035)'));
+        }
+        return target.apply(thisArg, args);
+    }
+});
