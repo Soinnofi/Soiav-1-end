@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Soiav 1 build 2182</title>
+    <link rel="stylesheet" href="./style.css">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soiav 1</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="setup-wizard active">
+        <div class="setup-container">
+            <div class="setup-header">
+                <h1><i class="fas fa-star"></i> Soiav 1</h1>
+                <p>Простая и элегантная операционная система</p>
+            </div>
+            
+            <div class="setup-step active" id="step1">
+                <h2>Выбор темы</h2>
+                <div class="theme-selector">
+                    <div class="theme-option" data-theme="light">
+                        <div class="theme-preview light-theme"></div>
+                        <span>Светлая</span>
+                    </div>
+                    <div class="theme-option" data-theme="dark">
+                        <div class="theme-preview dark-theme"></div>
+                        <span>Темная</span>
+                    </div>
+                    <div class="theme-option" data-theme="blue">
+                        <div class="theme-preview blue-theme"></div>
+                        <span>Синяя</span>
+                    </div>
+                    <div class="theme-option" data-theme="green">
+                        <div class="theme-preview green-theme"></div>
+                        <span>Зеленая</span>
+                    </div>
+                </div>
+                <div class="setup-buttons">
+                    <button class="setup-btn" onclick="nextStep(2)">Далее</button>
+                </div>
+            </div>
+
+            <div class="setup-step" id="step2">
+                <h2>Обои рабочего стола</h2>
+                <div class="wallpaper-grid">
+                    <div class="wallpaper-option" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4')" data-wallpaper="1"></div>
+                    <div class="wallpaper-option" style="background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb')" data-wallpaper="2"></div>
+                    <div class="wallpaper-option" style="background-image: url('https://images.unsplash.com/photo-1518837695005-2083093ee35b')" data-wallpaper="3"></div>
+                    <div class="wallpaper-option" style="background-image: url('https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07')" data-wallpaper="4"></div>
+                </div>
+                <div class="setup-buttons">
+                    <button class="setup-btn secondary" onclick="prevStep(1)">Назад</button>
+                    <button class="setup-btn" onclick="nextStep(3)">Далее</button>
+                </div>
+            </div>
+
+            <div class="setup-step" id="step3">
+                <h2>Персонализация</h2>
+                <div class="personalization-form">
+                    <label>Имя пользователя:</label>
+                    <input type="text" id="username" placeholder="Введите ваше имя" value="Пользователь Soiav">
+                    
+                    <label>Цвет акцента:</label>
+                    <input type="color" id="accentColor" value="#0078d7">
+                </div>
+                <div class="setup-buttons">
+                    <button class="setup-btn secondary" onclick="prevStep(2)">Назад</button>
+                    <button class="setup-btn" onclick="nextStep(4)">Далее</button>
+                </div>
+            </div>
+
+            <div class="setup-step" id="step4">
+                <h2>Системные настройки</h2>
+                <div class="personalization-form">
+                    <label>Системный диск:</label>
+                    <select id="systemDisk">
+                        <option value="C">Диск C: (SSD 256GB)</option>
+                        <option value="D">Диск D: (HDD 1TB)</option>
+                        <option value="E">Диск E: (Внешний HDD)</option>
+                    </select>
+
+                    <label>Режим производительности:</label>
+                    <select id="performance">
+                        <option value="balanced">Сбалансированный</option>
+                        <option value="performance">Высокая производительность</option>
+                        <option value="powersave">Энергосбережение</option>
+                    </select>
+
+                    <label>Часовой пояс:</label>
+                    <select id="timezone">
+                        <option value="moscow">Москва (UTC+3)</option>
+                        <option value="london">Лондон (UTC+0)</option>
+                        <option value="newyork">Нью-Йорк (UTC-5)</option>
+                    </select>
+                </div>
+                <div class="setup-buttons">
+                    <button class="setup-btn secondary" onclick="prevStep(3)">Назад</button>
+                    <button class="setup-btn" onclick="nextStep(5)">Далее</button>
+                </div>
+            </div>
+
+            <div class="setup-step" id="step5">
+                <h2>Завершение настройки</h2>
+                <div class="final-step">
+                    <div class="loading-animation">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Применяем настройки...</div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text" id="progressText">Подготовка системы...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="desktop" id="desktop">
+        <div class="desktop-icons">
+            <div class="desktop-icon" onclick="openApp('fileExplorer')" data-app="fileExplorer">
+                <i class="fas fa-folder"></i>
+                <span>Файлы</span>
+            </div>
+            <div class="desktop-icon" onclick="openApp('browser')" data-app="browser">
+                <i class="fas fa-globe"></i>
+                <span>Браузер</span>
+            </div>
+            <div class="desktop-icon" onclick="openApp('terminal')" data-app="terminal">
+                <i class="fas fa-terminal"></i>
+                <span>Терминал</span>
+            </div>
+            <div class="desktop-icon" onclick="openApp('store')" data-app="store">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Магазин</span>
+            </div>
+            <div class="desktop-icon" onclick="openApp('settings')" data-app="settings">
+                <i class="fas fa-cog"></i>
+                <span>Настройки</span>
+            </div>
+            <div class="desktop-icon" onclick="openApp('photos')" data-app="photos">
+                <i class="fas fa-images"></i>
+                <span>Фотографии</span>
+            </div>
+            <div class="desktop-icon" onclick="openApp('music')" data-app="music">
+                <i class="fas fa-music"></i>
+                <span>Музыка</span>
+            </div>
+            <div class="desktop-icon" onclick="openApp('calendar')" data-app="calendar">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Календарь</span>
+            </div>
+        </div>
+
+        <div class="window" id="fileExplorer">
+            <div class="window-header">
+                <span><i class="fas fa-folder"></i> Проводник</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('fileExplorer')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('fileExplorer')">□</button>
+                    <button class="window-control" onclick="closeWindow('fileExplorer')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="explorer-toolbar">
+                    <button class="toolbar-btn"><i class="fas fa-arrow-left"></i></button>
+                    <button class="toolbar-btn"><i class="fas fa-arrow-right"></i></button>
+                    <button class="toolbar-btn"><i class="fas fa-arrow-up"></i></button>
+                    <div class="address-bar">Этот компьютер > Локальный диск (C:)</div>
+                </div>
+                <div class="file-grid">
+                    <div class="file-item" onclick="openFile('documents')">
+                        <i class="fas fa-folder"></i>
+                        <span>Документы</span>
+                    </div>
+                    <div class="file-item" onclick="openFile('images')">
+                        <i class="fas fa-folder"></i>
+                        <span>Изображения</span>
+                    </div>
+                    <div class="file-item" onclick="openFile('downloads')">
+                        <i class="fas fa-folder"></i>
+                        <span>Загрузки</span>
+                    </div>
+                    <div class="file-item" onclick="openFile('music')">
+                        <i class="fas fa-folder"></i>
+                        <span>Музыка</span>
+                    </div>
+                    <div class="file-item" onclick="openFile('videos')">
+                        <i class="fas fa-folder"></i>
+                        <span>Видео</span>
+                    </div>
+                    <div class="file-item" data-file="document.txt" onclick="openFile('document.txt')">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Документ.txt</span>
+                    </div>
+                    <div class="file-item" data-file="image.jpg" onclick="openFile('image.jpg')">
+                        <i class="fas fa-file-image"></i>
+                        <span>Изображение.jpg</span>
+                    </div>
+                    <div class="file-item" data-file="music.mp3" onclick="openFile('music.mp3')">
+                        <i class="fas fa-file-audio"></i>
+                        <span>Музыка.mp3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="browser">
+            <div class="window-header">
+                <span><i class="fas fa-globe"></i> Soiav Browser</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('browser')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('browser')">□</button>
+                    <button class="window-control" onclick="closeWindow('browser')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="browser-bar">
+                    <div class="browser-controls">
+                        <button class="browser-btn"><i class="fas fa-arrow-left"></i></button>
+                        <button class="browser-btn"><i class="fas fa-arrow-right"></i></button>
+                        <button class="browser-btn"><i class="fas fa-redo"></i></button>
+                    </div>
+                    <input type="text" value="https://soiav-system.com/welcome" class="url-bar">
+                    <button class="browser-btn"><i class="fas fa-home"></i></button>
+                </div>
+                <div class="browser-content">
+                    <h2>Добро пожаловать в Soiav 1!</h2>
+                    <p>Простая и элегантная операционная система</p>
+                    <div class="browser-features">
+                        <div class="feature-card">
+                            <i class="fas fa-bolt"></i>
+                            <h3>Быстрая</h3>
+                            <p>Оптимизированная для скорости работы</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-palette"></i>
+                            <h3>Красивая</h3>
+                            <p>Современный дизайн с анимациями</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-shield-alt"></i>
+                            <h3>Надежная</h3>
+                            <p>Стабильная работа без сбоев</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="terminal">
+            <div class="window-header">
+                <span><i class="fas fa-terminal"></i> Soiav Terminal</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('terminal')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('terminal')">□</button>
+                    <button class="window-control" onclick="closeWindow('terminal')">×</button>
+                </div>
+            </div>
+            <div class="window-content terminal-content">
+                <div class="terminal-output" id="terminalOutput">
+                    <div class="terminal-line">
+                        <span class="prompt">user@soiav:~$ </span>
+                        <span class="command">neofetch</span>
+                    </div>
+                    <div class="system-info">
+                        <div class="ascii-art">
+                            <pre>
+  _____           _       
+ / ____|         | |      
+| (___   ___ __ _| | __ _ 
+ \___ \ / __/ _` | |/ _` |
+ ____) | (_| (_| | | (_| |
+|_____/ \___\__,_|_|\__,_|
+                            </pre>
+                        </div>
+                        <div class="sys-info">
+                            <div>Soiav OS 1.0</div>
+                            <div>Kernel: 6.4.2-soiav</div>
+                            <div>DE: Soiav Desktop Environment</div>
+                            <div>Shell: soiav-sh 2.1.4</div>
+                        </div>
+                    </div>
+                    <div class="terminal-line">
+                        <span class="prompt">user@soiav:~$ </span>
+                        <span class="command">Введите 'help' для списка команд</span>
+                    </div>
+                </div>
+                <div class="terminal-input">
+                    <span class="prompt">user@soiav:~$ </span>
+                    <input type="text" id="terminalInput" onkeypress="handleTerminalCommand(event)">
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="store">
+            <div class="window-header">
+                <span><i class="fas fa-shopping-bag"></i> Soiav Store</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('store')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('store')">□</button>
+                    <button class="window-control" onclick="closeWindow('store')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="store-header">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Поиск приложений и игр...">
+                    </div>
+                    <div class="store-categories">
+                        <button class="category-btn active">Все</button>
+                        <button class="category-btn">Игры</button>
+                        <button class="category-btn">Приложения</button>
+                        <button class="category-btn">Утилиты</button>
+                    </div>
+                </div>
+                <div class="apps-grid" id="appsGrid"></div>
+            </div>
+        </div>
+
+        <div class="window" id="settings">
+            <div class="window-header">
+                <span><i class="fas fa-cog"></i> Настройки системы</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('settings')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('settings')">□</button>
+                    <button class="window-control" onclick="closeWindow('settings')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="settings-layout">
+                    <div class="settings-sidebar">
+                        <div class="settings-category active" data-category="personalization">
+                            <i class="fas fa-palette"></i>
+                            <span>Персонализация</span>
+                        </div>
+                        <div class="settings-category" data-category="system">
+                            <i class="fas fa-desktop"></i>
+                            <span>Система</span>
+                        </div>
+                        <div class="settings-category" data-category="apps">
+                            <i class="fas fa-th-large"></i>
+                            <span>Приложения</span>
+                        </div>
+                        <div class="settings-category" data-category="privacy">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Конфиденциальность</span>
+                        </div>
+                        <div class="settings-category" data-category="updates">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Обновления</span>
+                        </div>
+                    </div>
+                    <div class="settings-content">
+                        <div class="settings-section active" id="personalization">
+                            <h3>Персонализация</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Тема</div>
+                                    <div class="setting-desc">Выберите светлую или темную тему оформления</div>
+                                </div>
+                                <select class="setting-control" onchange="changeTheme(this.value)">
+                                    <option value="light">Светлая</option>
+                                    <option value="dark">Темная</option>
+                                    <option value="blue">Синяя</option>
+                                    <option value="green">Зеленая</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Обои рабочего стола</div>
+                                    <div class="setting-desc">Измените фоновое изображение рабочего стола</div>
+                                </div>
+                                <button class="setting-btn" onclick="openWallpaperPicker()">Выбрать</button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Цвет акцента</div>
+                                    <div class="setting-desc">Выберите основной цвет системы</div>
+                                </div>
+                                <input type="color" class="setting-control" value="#0078d7" onchange="changeAccentColor(this.value)">
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="system">
+                            <h3>Система</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Энергосбережение</div>
+                                    <div class="setting-desc">Оптимизация использования батареи</div>
+                                </div>
+                                <button class="setting-btn">Настроить</button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Хранилище</div>
+                                    <div class="setting-desc">Управление дисковым пространством</div>
+                                </div>
+                                <button class="setting-btn">Очистить</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="apps">
+                            <h3>Приложения</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Установленные приложения</div>
+                                    <div class="setting-desc">Управление установленными приложениями</div>
+                                </div>
+                                <button class="setting-btn" onclick="openApp('store')">Открыть магазин</button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Приложения по умолчанию</div>
+                                    <div class="setting-desc">Настройка приложений по умолчанию</div>
+                                </div>
+                                <button class="setting-btn">Настроить</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="privacy">
+                            <h3>Конфиденциальность</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Разрешения приложений</div>
+                                    <div class="setting-desc">Управление разрешениями для приложений</div>
+                                </div>
+                                <button class="setting-btn">Управлять</button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Диагностика и отзывы</div>
+                                    <div class="setting-desc">Настройка данных диагностики</div>
+                                </div>
+                                <button class="setting-btn">Настроить</button>
+                            </div>
+                        </div>
+
+                        <div class="settings-section" id="updates">
+                            <h3>Обновления</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Проверка обновлений</div>
+                                    <div class="setting-desc">Проверить наличие обновлений системы</div>
+                                </div>
+                                <button class="setting-btn" onclick="checkForUpdates()">Проверить обновления</button>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <div class="setting-title">Автоматические обновления</div>
+                                    <div class="setting-desc">Настройка автоматического обновления</div>
+                                </div>
+                                <button class="setting-btn">Настроить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="photos">
+            <div class="window-header">
+                <span><i class="fas fa-images"></i> Фотографии</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('photos')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('photos')">□</button>
+                    <button class="window-control" onclick="closeWindow('photos')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="app-header">
+                    <h2>Фотографии</h2>
+                    <p>Просмотр и управление вашими изображениями</p>
+                </div>
+                <div class="photos-grid">
+                    <div class="photo-item" onclick="openPhoto('photo1')">
+                        <div class="photo-preview" style="background-image: url('https://images.unsplash.com/photo-1541963463532-d68292c34b19')"></div>
+                        <span>Пейзаж.jpg</span>
+                    </div>
+                    <div class="photo-item" onclick="openPhoto('photo2')">
+                        <div class="photo-preview" style="background-image: url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e')"></div>
+                        <span>Лес.png</span>
+                    </div>
+                    <div class="photo-item" onclick="openPhoto('photo3')">
+                        <div class="photo-preview" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')"></div>
+                        <span>Пляж.jpg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="music">
+            <div class="window-header">
+                <span><i class="fas fa-music"></i> Музыка</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('music')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('music')">□</button>
+                    <button class="window-control" onclick="closeWindow('music')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="app-header">
+                    <h2>Музыка</h2>
+                    <p>Воспроизведение вашей музыки</p>
+                </div>
+                <div class="music-player">
+                    <div class="now-playing">
+                        <div class="album-art"></div>
+                        <div class="track-info">
+                            <div class="track-title">Трек не выбран</div>
+                            <div class="track-artist">Выберите композицию</div>
+                        </div>
+                    </div>
+                    <div class="playlist">
+                        <div class="playlist-item" onclick="playTrack('track1')">
+                            <i class="fas fa-music"></i>
+                            <span>Композиция 1</span>
+                        </div>
+                        <div class="playlist-item" onclick="playTrack('track2')">
+                            <i class="fas fa-music"></i>
+                            <span>Композиция 2</span>
+                        </div>
+                        <div class="playlist-item" onclick="playTrack('track3')">
+                            <i class="fas fa-music"></i>
+                            <span>Композиция 3</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="calendar">
+            <div class="window-header">
+                <span><i class="fas fa-calendar-alt"></i> Календарь</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('calendar')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('calendar')">□</button>
+                    <button class="window-control" onclick="closeWindow('calendar')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="app-header">
+                    <h2>Календарь</h2>
+                    <p>Планируйте ваши события</p>
+                </div>
+                <div class="calendar-app">
+                    <div class="calendar-month-header">
+                        <button class="calendar-nav-btn" onclick="changeAppCalendarMonth(-1)">‹</button>
+                        <div class="calendar-month-title" id="appCalendarMonth"></div>
+                        <button class="calendar-nav-btn" onclick="changeAppCalendarMonth(1)">›</button>
+                    </div>
+                    <div class="calendar-weekdays">
+                        <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+                    </div>
+                    <div class="calendar-days-grid" id="appCalendarDays"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="window" id="fileViewer">
+            <div class="window-header">
+                <span><i class="fas fa-file"></i> Просмотр файла</span>
+                <div class="window-controls">
+                    <button class="window-control" onclick="minimizeWindow('fileViewer')">–</button>
+                    <button class="window-control" onclick="maximizeWindow('fileViewer')">□</button>
+                    <button class="window-control" onclick="closeWindow('fileViewer')">×</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="file-viewer-content" id="fileViewerContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="taskbar">
+        <div class="start-btn" onclick="toggleStartMenu()">
+            <div class="start-icon">S</div>
+        </div>
+        
+        <div class="taskbar-apps" id="taskbarApps">
+            <div class="taskbar-app pinned" onclick="toggleApp('fileExplorer')" data-app="fileExplorer">
+                <i class="fas fa-folder"></i>
+            </div>
+            <div class="taskbar-app pinned" onclick="toggleApp('browser')" data-app="browser">
+                <i class="fas fa-globe"></i>
+            </div>
+            <div class="taskbar-app pinned" onclick="toggleApp('store')" data-app="store">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+            <div class="taskbar-app pinned" onclick="toggleApp('settings')" data-app="settings">
+                <i class="fas fa-cog"></i>
+            </div>
+        </div>
+        
+        <div class="system-tray">
+            <div class="tray-icon" onclick="toggleNotificationCenter()">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="tray-icon" onclick="toggleSideMenu()">
+                <i class="fas fa-sliders-h"></i>
+            </div>
+            <div class="time-display" id="timeDisplay" onclick="toggleCalendar()">
+                <div class="time" id="currentTime"></div>
+                <div class="date" id="currentDate"></div>
+            </div>
+            <div class="account-btn" onclick="toggleAccountMenu()">
+                <div class="user-avatar-small">ПС</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="start-menu fullscreen">
+        <div class="start-background"></div>
+        <div class="start-content">
+            <div class="start-header">
+                <div class="user-info-start">
+                    <div class="user-avatar-large">ПС</div>
+                    <div class="user-details">
+                        <div class="user-name-start" id="userNameStart">Пользователь Soiav</div>
+                        <div class="user-status">В сети</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tiles-grid horizontal-scroll">
+                <div class="tiles-row">
+                    <!-- Tiles will be added by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="side-menu">
+        <div class="side-menu-header">
+            <h3><i class="fas fa-sliders-h"></i> Быстрые настройки</h3>
+        </div>
+        <div class="side-menu-content">
+            <div class="quick-settings">
+                <div class="quick-setting" onclick="toggleWiFi()">
+                    <i class="fas fa-wifi"></i>
+                    <span>Wi-Fi</span>
+                    <div class="toggle-switch">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="quick-setting" onclick="toggleBluetooth()">
+                    <i class="fas fa-bluetooth"></i>
+                    <span>Bluetooth</span>
+                    <div class="toggle-switch">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="quick-setting" onclick="toggleAirplane()">
+                    <i class="fas fa-plane"></i>
+                    <span>Режим полета</span>
+                    <div class="toggle-switch">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="quick-setting" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon"></i>
+                    <span>Темный режим</span>
+                    <div class="toggle-switch">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="brightness-slider">
+                <span>Яркость</span>
+                <input type="range" min="0" max="100" value="80" class="slider">
+            </div>
+            
+            <div class="volume-slider">
+                <span>Громкость</span>
+                <input type="range" min="0" max="100" value="60" class="slider">
+            </div>
+        </div>
+    </div>
+
+    <div class="notification-center">
+        <div class="nc-header">
+            <h3>Уведомления</h3>
+            <button class="nc-close" onclick="toggleNotificationCenter()">×</button>
+        </div>
+        <div class="quick-actions">
+            <div class="quick-action" onclick="toggleWiFi()">
+                <div class="qa-icon"><i class="fas fa-wifi"></i></div>
+                <div class="qa-text">Wi-Fi</div>
+                <div class="qa-status">Включено</div>
+            </div>
+            <div class="quick-action" onclick="toggleBluetooth()">
+                <div class="qa-icon"><i class="fas fa-bluetooth"></i></div>
+                <div class="qa-text">Bluetooth</div>
+                <div class="qa-status">Выключено</div>
+            </div>
+            <div class="quick-action" onclick="toggleDarkMode()">
+                <div class="qa-icon"><i class="fas fa-moon"></i></div>
+                <div class="qa-text">Темный режим</div>
+                <div class="qa-status">Выключено</div>
+            </div>
+            <div class="quick-action" onclick="openSettings('system')">
+                <div class="qa-icon"><i class="fas fa-battery-half"></i></div>
+                <div class="qa-text">Энергия</div>
+                <div class="qa-status">85%</div>
+            </div>
+        </div>
+        <div class="notifications-list">
+            <div class="notification">
+                <div class="notification-icon"><i class="fas fa-shield-alt"></i></div>
+                <div class="notification-content">
+                    <div class="notification-title">Защитник Soiav</div>
+                    <div class="notification-text">Система защищена</div>
+                </div>
+            </div>
+            <div class="notification">
+                <div class="notification-icon"><i class="fas fa-cloud-download-alt"></i></div>
+                <div class="notification-content">
+                    <div class="notification-title">Доступно обновление</div>
+                    <div class="notification-text">Soiav 1.0.1 - Установить</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="account-menu">
+        <div class="account-header">
+            <div class="user-avatar">ПС</div>
+            <div class="user-info">
+                <div class="user-name" id="userName">Пользователь Soiav</div>
+                <div class="user-email">user@soiav.local</div>
+            </div>
+        </div>
+        <div class="account-actions">
+            <div class="account-action" onclick="openApp('settings')">
+                <div class="action-icon"><i class="fas fa-user-cog"></i></div>
+                <div class="action-text">Настройки аккаунта</div>
+            </div>
+            <div class="account-action" onclick="lockScreen()">
+                <div class="action-icon"><i class="fas fa-lock"></i></div>
+                <div class="action-text">Заблокировать</div>
+            </div>
+            <div class="account-action" onclick="logout()">
+                <div class="action-icon"><i class="fas fa-sign-out-alt"></i></div>
+                <div class="action-text">Выйти</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="calendar-popup" id="calendarPopup">
+        <div class="calendar-header">
+            <button class="calendar-nav" onclick="changeCalendarMonth(-1)">‹</button>
+            <div class="calendar-month" id="calendarMonth"></div>
+            <button class="calendar-nav" onclick="changeCalendarMonth(1)">›</button>
+        </div>
+        <div class="calendar-weekdays">
+            <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+        </div>
+        <div class="calendar-days" id="calendarDays"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+    <script  src="./script.js"></script>
+
+  </body>
+  
+</html>
